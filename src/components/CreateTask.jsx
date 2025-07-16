@@ -1,12 +1,17 @@
 import React, { useState } from 'react'
 
-const CreateTask = ({addTask}) => {
+const CreateTask = ({ addTask }) => {
     const [job, setJob] = useState("");
     const handleOnChange = (event) => {
         setJob(event.target.value);
     }
     const handleAddTaskBtn = () => {
-        addTask(job);
+        const newTask = {
+            id: Date.now(),
+            task: job,
+            isDone: false
+        }
+        addTask(newTask);
         setJob("");
     }
     return (
