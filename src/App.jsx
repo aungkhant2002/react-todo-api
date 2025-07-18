@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Heading from './components/Heading'
 import CreateTask from './components/CreateTask'
 import TaskList from './components/TaskList'
+import Swal from 'sweetalert2'
 
 const App = () => {
   const [tasks, setTask] = useState([
@@ -14,6 +15,46 @@ const App = () => {
   ]);
 
   const addTask = (newTask) => {
+    if (!newTask.task.trim()) {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "bottom-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+      Toast.fire({
+        icon: "error",
+        title: "Task Cannot be Empty"
+      });
+      return;
+    } else if (newTask.task) {
+      const isDuplicate = tasks.some(el => el.task.toLowerCase() === newTask.task.trim().toLowerCase());
+      if (isDuplicate) {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "bottom-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: "error",
+          title: `${newTask.task} Already Exits`
+        });
+        return;
+      }
+    }
+
+
     setTask([...tasks, newTask])
   }
 
