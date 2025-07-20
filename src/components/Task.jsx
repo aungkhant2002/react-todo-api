@@ -1,45 +1,11 @@
 import React from 'react'
-import Swal from 'sweetalert2';
 
 const Task = ({ job: { id, task, isDone }, removeTask, doneTask }) => {
+
   const handleRemoveTask = () => {
-    const swalWithBootstrapButtons = Swal.mixin({
-      customClass: {
-        confirmButton: "border bg-indigo-900 text-white px-2 py-1 rounded-lg ml-2",
-        cancelButton: "border bg-pink-900 text-white px-2 py-1 rounded-lg"
-      },
-      buttonsStyling: false
-    });
-    swalWithBootstrapButtons.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, cancel!",
-      reverseButtons: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-        removeTask(id);
-
-        swalWithBootstrapButtons.fire({
-          title: "Deleted!",
-          text: "Your task has been deleted.",
-          icon: "success"
-        });
-      } else if (
-        /* Read more about handling dismissals below */
-        result.dismiss === Swal.DismissReason.cancel
-      ) {
-        swalWithBootstrapButtons.fire({
-          title: "Cancelled",
-          text: "Your task is safe :)",
-          icon: "error"
-        });
-      }
-    });
-
+    removeTask(id);
   }
+
   const handleOnChange = () => {
     doneTask(id);
   }

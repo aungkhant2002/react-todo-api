@@ -1,61 +1,26 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Heading from './components/Heading'
 import CreateTask from './components/CreateTask'
 import TaskList from './components/TaskList'
-import Swal from 'sweetalert2'
 
 const App = () => {
-  const [tasks, setTask] = useState([
-    { id: 1, task: "Design database schema", isDone: false },
-    { id: 2, task: "Implement user authentication", isDone: true },
-    { id: 3, task: "Create REST API for leave requests", isDone: false },
-    { id: 4, task: "Build attendance summary page", isDone: false },
-    { id: 5, task: "Write unit tests", isDone: false },
-    { id: 6, task: "Deploy to production server", isDone: false }
-  ]);
+  const [tasks, setTask] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [sending, isSending] = useState(false);
 
-  const addTask = (newTask) => {
-    if (!newTask.task.trim()) {
-      const Toast = Swal.mixin({
-        toast: true,
-        position: "bottom-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        }
-      });
-      Toast.fire({
-        icon: "error",
-        title: "Task Cannot be Empty"
-      });
-      return;
-    } else if (newTask.task) {
-      const isDuplicate = tasks.some(el => el.task.toLowerCase() === newTask.task.trim().toLowerCase());
-      if (isDuplicate) {
-        const Toast = Swal.mixin({
-          toast: true,
-          position: "bottom-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          }
-        });
-        Toast.fire({
-          icon: "error",
-          title: `${newTask.task} Already Exits`
-        });
-        return;
-      }
-    }
+  const addTask = async (newTask) => {
+    isSending(true);
+    const res = await fetch("http://localhost:5000/tasks", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newTask),
+    });
 
-
-    setTask([...tasks, newTask])
+    const data = await res.json();
+    setTask([...tasks, data]);
+    isSending(false);
   }
 
   const removeTask = (id) => {
@@ -66,11 +31,24 @@ const App = () => {
     setTask(tasks.map((el) => (el.id === id ? { ...el, isDone: !el.isDone } : el)));
   }
 
+  const fetchTasks = async () => {
+    setLoading(true);
+    const res = await fetch("http://localhost:5000/tasks");
+    const data = await res.json();
+    setTask(data);
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    fetchTasks();
+  }, [])
+
   return (
     <div className='p-10'>
       <Heading />
-      <CreateTask addTask={addTask} />
+      <CreateTask sending={sending} addTask={addTask} />
       <TaskList doneTask={doneTask} removeTask={removeTask} tasks={tasks} />
+      { loading && <p className='text-2xl text-white text-center font-serif font-bold'>Loading...</p> }
     </div>
   )
 }
