@@ -1,34 +1,19 @@
 {
-    "tasks": [
-        {
-            "id": 1,
-            "task": "Design database schema",
-            "isDone": false
-        },
-        {
-            "id": 2,
-            "task": "Implement user authentication",
-            "isDone": true
-        },
-        {
-            "id": 3,
-            "task": "Create REST API for leave requests",
-            "isDone": false
-        },
-        {
-            "id": 4,
-            "task": "Build attendance summary page",
-            "isDone": false
-        },
-        {
-            "id": 5,
-            "task": "Write unit tests",
-            "isDone": false
-        },
-        {
-            "id": 6,
-            "task": "Deploy to production server",
-            "isDone": false
-        }
-    ]
+  "tasks": [
+    {
+      "id": 1,
+      "task": "Design database schema",
+      "isDone": true
+    },
+    {
+      "id": 2,
+      "task": "Implement user authentication",
+      "isDone": true
+    },
+    {
+      "id": 3,
+      "task": "Create REST API for leave requests",
+      "isDone": false
+    }
+  ]
 }
